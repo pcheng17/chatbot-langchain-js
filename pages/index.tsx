@@ -25,7 +25,7 @@ export default function Home() {
   }>({
     messages: [
       {
-        message: 'Hi, what would you like to learn about this legal case?',
+        message: 'Hi, what would you like to ask Andrew Huberman?',
         type: 'apiMessage',
       },
     ],
@@ -120,12 +120,16 @@ export default function Home() {
     }
   };
 
+  const createURL = (id: string, timestamp: number) => {
+    return `https://youtu.be/${id}?t=${Math.trunc(timestamp)}`;
+  };
+
   return (
     <>
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
           <h1 className="text-2xl font-bold leading-[1.1] tracking-tighter text-center">
-            Chat With Your Legal Docs
+            Chat With Andrew Huberman
           </h1>
           <main className={styles.main}>
             <div className={styles.cloud}>
@@ -191,12 +195,47 @@ export default function Home() {
                                     <h3>Source {index + 1}</h3>
                                   </AccordionTrigger>
                                   <AccordionContent>
-                                    <ReactMarkdown linkTarget="_blank">
-                                      {doc.pageContent}
-                                    </ReactMarkdown>
-                                    <p className="mt-2">
-                                      <b>Source:</b> {doc.metadata.source}
-                                    </p>
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                      }}
+                                    >
+                                      <div
+                                        style={{
+                                          flex: '0 0 250px',
+                                          marginRight: '1rem',
+                                        }}
+                                      >
+                                        <Image
+                                          src={doc.metadata.thumbnail}
+                                          alt={doc.metadata.title}
+                                          width={250}
+                                          height={250}
+                                        />
+                                      </div>
+                                      <div className={styles.markdownanswer}>
+                                        <ReactMarkdown linkTarget="_blank">
+                                          {doc.pageContent}
+                                        </ReactMarkdown>
+                                        <br></br>
+                                        <p>
+                                          Source:&nbsp;
+                                          <a
+                                            href={createURL(
+                                              doc.metadata.video_id,
+                                              doc.metadata.start_time,
+                                            )}
+                                            target="_blank"
+                                          >
+                                            {createURL(
+                                              doc.metadata.video_id,
+                                              doc.metadata.start_time,
+                                            )}
+                                          </a>
+                                        </p>
+                                      </div>
+                                    </div>
                                   </AccordionContent>
                                 </AccordionItem>
                               </div>
@@ -224,7 +263,7 @@ export default function Home() {
                     placeholder={
                       loading
                         ? 'Waiting for response...'
-                        : 'What is this legal case about?'
+                        : 'Who is Andrew Huberman?'
                     }
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
